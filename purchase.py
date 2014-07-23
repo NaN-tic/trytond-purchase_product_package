@@ -14,15 +14,18 @@ class PurchaseLine:
     product_has_packages = fields.Function(fields.Boolean(
             'Product Has packages'),
         'on_change_with_product_has_packages')
+    product_template = fields.Function(fields.Many2One('product.template',
+            'Product Has packages'),
+        'on_change_with_product_template')
     product_package = fields.Many2One('product.package', 'Package',
         domain=[
-            ('product', '=', Eval('product', 0))
+            ('product', '=', Eval('product_template', 0))
             ],
         states={
             'invisible': ~Eval('product_has_packages', False),
             'required': Eval('product_has_packages', False),
             },
-        depends=['product', 'product_has_packages'])
+        depends=['product_template', 'product_has_packages'])
     package_quantity = fields.Integer('Package Quantity',
         states={
             'invisible': ~Eval('product_has_packages', False),
@@ -54,6 +57,12 @@ class PurchaseLine:
             return True
         return False
 
+    @fields.depends('product')
+    def on_change_with_product_template(self, name=None):
+        if self.product:
+            return self.product.template.id
+        return None
+
     @fields.depends('product_package')
     def on_change_product_package(self):
         res = {}
@@ -67,19 +76,12 @@ class PurchaseLine:
     def on_change_package_quantity(self):
         res = {}
         if self.product_package and self.package_quantity:
-            print "HOLA MANOLA 1"
             self.quantity = (float(self.package_quantity) *
                 self.product_package.quantity)
-            print "HOLA MANOLA 2"
             res['quantity'] = self.quantity
-            print "HOLA MANOLA 3"
             res.update(self.on_change_quantity())
-            print "HOLA MANOLA 4"
             res['amount'] = self.on_change_with_amount()
-            print "HOLA MANOLA 5"
             res['delivery_date'] = self.on_change_with_delivery_date()
-            print "HOLA MANOLA 6"
-        print "RES: ", res
         return res
 
     @fields.depends('product_package', 'quantity')
