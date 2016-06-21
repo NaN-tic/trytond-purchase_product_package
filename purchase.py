@@ -1,10 +1,11 @@
 #The COPYRIGHT file at the top level of this repository contains the full
 #copyright notices and license terms.
+from math import ceil
 from trytond.model import fields
-from trytond.pool import PoolMeta
+from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
 
-__all__ = ['PurchaseLine']
+__all__ = ['PurchaseLine', 'CreatePurchase']
 __metaclass__ = PoolMeta
 
 
@@ -91,3 +92,31 @@ class PurchaseLine:
             res['package_quantity'] = int(self.quantity /
                 self.product_package.quantity)
         return res
+
+
+class CreatePurchase:
+    __name__ = 'purchase.request.create_purchase'
+
+    @classmethod
+    def compute_purchase_line(cls, request, purchase):
+        Package = Pool().get('product.package')
+
+        packages = Package.search([
+                ('product', '=', request.product.template),
+                ], limit=1)
+        if packages:
+            package = packages[0]
+            request.quantity = (ceil(request.quantity / package.quantity) *
+                package.quantity)
+            request.save()
+
+        line = super(CreatePurchase, cls).compute_purchase_line(request,
+                purchase)
+
+        if packages:
+            package = packages[0]
+            line.product_package = package
+            line.package_quantity = ceil(line.quantity / package.quantity)
+            line.quantity = line.package_quantity * package.quantity
+
+        return line

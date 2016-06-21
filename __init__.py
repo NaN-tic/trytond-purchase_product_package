@@ -8,3 +8,6 @@ def register():
     Pool.register(
         PurchaseLine,
         module='purchase_product_package', type_='model')
+    Pool.register(
+        CreatePurchase,
+        module='purchase_product_package', type_='wizard')
