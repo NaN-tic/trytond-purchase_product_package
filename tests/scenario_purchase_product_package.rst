@@ -9,6 +9,7 @@ Imports::
     >>> from decimal import Decimal
     >>> from operator import attrgetter
     >>> from proteus import config, Model, Wizard
+    >>> from trytond.tests.tools import activate_modules
     >>> from trytond.modules.company.tests.tools import create_company, \
     ...     get_company
     >>> from trytond.modules.account.tests.tools import create_fiscalyear, \
@@ -17,18 +18,9 @@ Imports::
     ...     set_fiscalyear_invoice_sequences, create_payment_term
     >>> today = datetime.date.today()
 
-Create database::
-
-    >>> config = config.set_trytond()
-    >>> config.pool.test = True
-
 Install purchase::
 
-    >>> Module = Model.get('ir.module')
-    >>> purchase_module, = Module.find([
-    ...     ('name', '=', 'purchase_product_package')])
-    >>> Module.install([purchase_module.id], config.context)
-    >>> Wizard('ir.module.install_upgrade').execute('upgrade')
+    >>> config = activate_modules('purchase_product_package')
 
 Create company::
 
@@ -107,7 +99,6 @@ Create product::
     >>> template.purchasable = True
     >>> template.salable = True
     >>> template.list_price = Decimal('10')
-    >>> template.cost_price = Decimal('5')
     >>> template.cost_price_method = 'fixed'
     >>> template.account_expense = expense
     >>> template.account_revenue = revenue
@@ -118,6 +109,7 @@ Create product::
     >>> template.reload()
     >>> package, = template.packages
     >>> product.template = template
+    >>> product.cost_price = Decimal('5')
     >>> product.save()
 
 Create payment term::
@@ -143,10 +135,10 @@ Purchase products with package::
     >>> line.amount
     Decimal('60.00')
     >>> line.quantity = 13
-    >>> purchase.save()
+    >>> purchase.save()  # doctest: +IGNORE_EXCEPTION_DETAIL
     Traceback (most recent call last):
         ...
-    UserError: ('UserError', (u'The quantity "13.0" of product "product" is not a multiple of it\'s package "Box" quantity "6.0".', ''))
+    UserError: ...
     >>> line.quantity = 12
     >>> line.package_quantity
     2
