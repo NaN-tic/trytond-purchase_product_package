@@ -74,7 +74,7 @@ class PurchaseLine:
             self.package_quantity = None
 
     @fields.depends('product_package', 'package_quantity', 'unit_price',
-        'type', methods=['quantity', 'delivery_date'])
+        'type', methods=['on_change_quantity', 'on_change_with_delivery_date'])
     def on_change_package_quantity(self):
         if self.product_package and self.package_quantity:
             self.quantity = (float(self.package_quantity) *
