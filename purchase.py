@@ -7,8 +7,7 @@ from trytond.pyson import Eval
 __all__ = ['PurchaseLine']
 
 
-class PurchaseLine:
-    __metaclass__ = PoolMeta
+class PurchaseLine(metaclass=PoolMeta):
     __name__ = 'purchase.line'
 
     product_has_packages = fields.Function(fields.Boolean(
