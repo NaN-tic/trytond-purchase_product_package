@@ -98,9 +98,10 @@ class CreatePurchase:
     __name__ = 'purchase.request.create_purchase'
 
     @classmethod
-    def compute_purchase_line(cls, request, purchase):
+    def compute_purchase_line(cls, key, requests, purchase):
         Package = Pool().get('product.package')
 
+        request = requests[0]
         packages = Package.search([
                 ('product', '=', request.product.template),
                 ], limit=1)
@@ -110,7 +111,7 @@ class CreatePurchase:
                 package.quantity)
             request.save()
 
-        line = super(CreatePurchase, cls).compute_purchase_line(request,
+        line = super(CreatePurchase, cls).compute_purchase_line(key, requests,
                 purchase)
 
         if packages:
