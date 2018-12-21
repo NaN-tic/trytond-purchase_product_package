@@ -55,6 +55,14 @@ class PurchaseLine:
                     self.product.rec_name, self.product_package.rec_name,
                     self.product_package.quantity))
 
+    @fields.depends(methods=['product_has_packages'])
+    def on_change_product_supplier(self):
+        super(PurchaseLine, self).on_change_product_supplier()
+        if self.product and self.product.packages:
+            self.product_has_packages = True
+            self.product_template = self.product.template.id
+
+
     @fields.depends('product')
     def on_change_with_product_has_packages(self, name=None):
         if self.product and self.product.packages:
