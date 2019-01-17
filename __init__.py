@@ -8,3 +8,7 @@ def register():
     Pool.register(
         purchase.PurchaseLine,
         module='purchase_product_package', type_='model')
+    Pool.register(
+        purchase.HandleShipmentException,
+        purchase.HandleInvoiceException,
+        module='purchase_product_package', type_='wizard')

@@ -3,8 +3,9 @@
 from trytond.model import fields
 from trytond.pool import PoolMeta
 from trytond.pyson import Eval
+from trytond.transaction import Transaction
 
-__all__ = ['PurchaseLine']
+__all__ = ['PurchaseLine', 'HandleShipmentException', 'HandleInvoiceException']
 
 
 class PurchaseLine(metaclass=PoolMeta):
@@ -47,14 +48,15 @@ class PurchaseLine(metaclass=PoolMeta):
             super(PurchaseLine, self).pre_validate()
         except AttributeError:
             pass
-        if self.product_package:
+        if (self.product_package
+                and Transaction().context.get('validate_package', True)):
             package_quantity = self.quantity / self.product_package.quantity
             if float(int(package_quantity)) != package_quantity:
                 self.raise_user_error('package_quantity', (self.quantity,
                     self.product.rec_name, self.product_package.rec_name,
                     self.product_package.quantity))
 
-    @fields.depends(methods=['product_has_packages'])
+    @fields.depends(methods=['on_change_with_product_has_packages'])
     def on_change_product_supplier(self):
         super(PurchaseLine, self).on_change_product_supplier()
         if self.product and self.product.packages:
@@ -96,3 +98,19 @@ class PurchaseLine(metaclass=PoolMeta):
         if self.product_package and self.quantity:
             self.package_quantity = int(self.quantity /
                 self.product_package.quantity)
+
+
+class HandleShipmentException(metaclass=PoolMeta):
+    __name__ = 'purchase.handle.shipment.exception'
+
+    def transition_handle(self):
+        with Transaction().set_context(validate_package=False):
+            return super(HandleShipmentException, self).transition_handle()
+
+
+class HandleInvoiceException(metaclass=PoolMeta):
+    __name__ = 'purchase.handle.invoice.exception'
+
+    def transition_handle(self):
+        with Transaction().set_context(validate_package=False):
+            return super(HandleInvoiceException, self).transition_handle()
