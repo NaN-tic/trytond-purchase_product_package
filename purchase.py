@@ -59,6 +59,15 @@ class PurchaseLine(metaclass=PoolMeta):
             self.product_has_packages = True
             self.product_template = self.product.template.id
 
+    @fields.depends('product')
+    def on_change_product(self):
+        super(PurchaseLine, self).on_change_product()
+        self.product_package = None
+        if self.product:
+            for package in self.product.template.packages:
+                if package.is_default:
+                    self.product_package = package
+                    break
 
     @fields.depends('product')
     def on_change_with_product_has_packages(self, name=None):
