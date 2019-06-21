@@ -46,7 +46,8 @@ class PurchaseLine(metaclass=PoolMeta):
                 and Transaction().context.get('validate_package', True)):
             package_quantity = self.quantity / self.product_package.quantity
             if float(int(package_quantity)) != package_quantity:
-                raise UserError(gettext('purchase_product_package.package_quantity',
+                raise UserError(gettext(
+                    'purchase_product_package.msg_package_quantity',
                     qty=self.quantity,
                     product=self.product.rec_name,
                     package=self.product_package.rec_name,
