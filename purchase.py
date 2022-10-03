@@ -28,14 +28,16 @@ class PurchaseLine(metaclass=PoolMeta):
         states={
             'invisible': ~Eval('product_has_packages', False),
             'required': Eval('product_has_packages', False),
+            'readonly': Eval('purchase_state') != 'draft',
             },
-        depends=['product_template', 'product_has_packages'])
+        depends=['product_template', 'product_has_packages', 'purchase_state'])
     package_quantity = fields.Integer('Package Quantity',
         states={
             'invisible': ~Eval('product_has_packages', False),
             'required': Eval('product_has_packages', False),
+            'readonly': Eval('purchase_state') != 'draft',
             },
-        depends=['product_has_packages'])
+        depends=['product_has_packages', 'purchase_state'])
 
     @fields.depends('product_package', 'quantity', 'product_package',
         'product')
