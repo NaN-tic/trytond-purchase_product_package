@@ -8,11 +8,15 @@ msgstr "Quantitat paquets"
 
 msgctxt "field:purchase.line,product_has_packages:"
 msgid "Product Has packages"
-msgstr "El producto tiene paquetes"
+msgstr "El producte té paquets"
 
 msgctxt "field:purchase.line,product_package:"
 msgid "Package"
 msgstr "Empaquetament"
+
+msgctxt "field:purchase.line,product_template:"
+msgid "Product Has packages"
+msgstr "El producte té paquet"
 
 msgctxt "model:ir.message,text:msg_product_package_null"
 msgid "You can not create a package because there are sale lines that already "
@@ -22,8 +26,8 @@ msgstr "No pot crear paquets perque ja hi han línies de venta que ja utilitzen 
 
 msgctxt "model:ir.message,text:msg_package_quantity"
 msgid ""
-"The quantity \"%(qty)s\" of product \"%(product)s\" is not a multiple of it's package "
-"\"%(package)s\" quantity \"%(package_qty)s\"."
+"The quantity \"%(qty)s\" of product \"%(product)s\" is not a multiple of "
+"it\\'s package \"%(package)s\" quantity \"%(package_qty)s\"."
 msgstr ""
 "La quantitat \"%(qty)s\" del producte \"%(product)s\" no és un múltiple de la quantitat "
 "del seu paquet \"%(package)s\" (\"%(package_qty)s\")."
