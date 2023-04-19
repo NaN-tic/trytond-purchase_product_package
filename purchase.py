@@ -24,8 +24,8 @@ class PurchaseLine(metaclass=PoolMeta):
     product_package = fields.Many2One('product.package', 'Package',
         domain=[
             ['OR',
-                ('product', '=', Eval('product_template', 0)),
-                ('product', '=', Eval('product', 0))]
+                ('template', '=', Eval('product_template', 0)),
+                ('product', '=', Eval('product', 0)),]
         ],
         states={
             'invisible': ~Eval('product_has_packages', False),
@@ -33,7 +33,7 @@ class PurchaseLine(metaclass=PoolMeta):
             'readonly': Eval('purchase_state') != 'draft',
             },
         depends=['product_template', 'product_has_packages', 'purchase_state',
-            'proudct',])
+            'product',])
     package_quantity = fields.Integer('Package Quantity',
         states={
             'invisible': ~Eval('product_has_packages', False),
@@ -88,7 +88,8 @@ class PurchaseLine(metaclass=PoolMeta):
 
     @fields.depends('product')
     def on_change_with_product_has_packages(self, name=None):
-        if self.product and self.product.packages:
+        if self.product and (self.product.template.packages or
+                self.product.packages):
             return True
         return False
 
