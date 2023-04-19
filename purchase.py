@@ -23,14 +23,17 @@ class PurchaseLine(metaclass=PoolMeta):
         'on_change_with_product_template')
     product_package = fields.Many2One('product.package', 'Package',
         domain=[
-            ('product', '=', Eval('product_template', 0))
-            ],
+            ['OR',
+                ('template', '=', Eval('product_template', 0)),
+                ('product', '=', Eval('product', 0)),]
+        ],
         states={
             'invisible': ~Eval('product_has_packages', False),
             'required': Eval('product_has_packages', False),
             'readonly': Eval('purchase_state') != 'draft',
             },
-        depends=['product_template', 'product_has_packages', 'purchase_state'])
+        depends=['product_template', 'product_has_packages', 'purchase_state',
+            'product',])
     package_quantity = fields.Integer('Package Quantity',
         states={
             'invisible': ~Eval('product_has_packages', False),
@@ -69,15 +72,24 @@ class PurchaseLine(metaclass=PoolMeta):
     def on_change_product(self):
         super(PurchaseLine, self).on_change_product()
         self.product_package = None
-        if self.product:
-            for package in self.product.template.packages:
+        if self.product and not self.product_package:
+            # Check if we have a product.package (product.product level)
+            for package in self.product.packages:
                 if package.is_default:
                     self.product_package = package
                     break
+            if not self.product_package:
+                # If we dont have a default value in (product.product) we try
+                # to search at template level (product.template)
+                for package in self.product.template.packages:
+                    if package.is_default:
+                        self.product_package = package
+                        break
 
     @fields.depends('product')
     def on_change_with_product_has_packages(self, name=None):
-        if self.product and self.product.packages:
+        if self.product and (self.product.template.packages or
+                self.product.packages):
             return True
         return False
 
