@@ -61,18 +61,11 @@ class PurchaseLine(metaclass=PoolMeta):
                     package=self.product_package.rec_name,
                     package_qty=self.product_package.quantity))
 
-    @fields.depends(methods=['on_change_with_product_has_packages'])
-    def on_change_product_supplier(self):
-        super(PurchaseLine, self).on_change_product_supplier()
-        if self.product and self.product.packages:
-            self.product_has_packages = True
-            self.product_template = self.product.template.id
-
     @fields.depends('product')
     def on_change_product(self):
         super(PurchaseLine, self).on_change_product()
         self.product_package = None
-        if self.product and not self.product_package:
+        if self.product:
             # Check if we have a product.package (product.product level)
             for package in self.product.packages:
                 if package.is_default:
@@ -86,14 +79,14 @@ class PurchaseLine(metaclass=PoolMeta):
                         self.product_package = package
                         break
 
-    @fields.depends('product')
+    @fields.depends('product', 'product_supplier')
     def on_change_with_product_has_packages(self, name=None):
         if self.product and (self.product.template.packages or
                 self.product.packages):
             return True
         return False
 
-    @fields.depends('product')
+    @fields.depends('product', 'product_supplier')
     def on_change_with_product_template(self, name=None):
         if self.product:
             return self.product.template.id
