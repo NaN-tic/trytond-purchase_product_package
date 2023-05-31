@@ -1,5 +1,6 @@
 # The COPYRIGHT file at the top level of this repository contains the full
 # copyright notices and license terms.
+from decimal import Decimal
 from trytond.model import fields
 from trytond.pool import PoolMeta
 from trytond.pyson import Eval
@@ -53,7 +54,7 @@ class PurchaseLine(metaclass=PoolMeta):
                 and Transaction().context.get('validate_package', True)):
             package_quantity = ((self.quantity or 0.0) /
                 self.product_package.quantity)
-            if float(round(package_quantity,0)) != self.package_quantity:
+            if float(round(package_quantity, 8)) != self.package_quantity:
                 raise UserError(gettext(
                     'purchase_product_package.msg_package_quantity',
                     qty=self.quantity,
