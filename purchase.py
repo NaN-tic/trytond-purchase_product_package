@@ -52,7 +52,7 @@ class PurchaseLine(metaclass=PoolMeta):
             pass
         if (self.product_package
                 and Transaction().context.get('validate_package', True)):
-            package_quantity = ((self.quantity or 0.0) /
+            package_quantity = (abs(self.quantity or 0.0) /
                 self.product_package.quantity)
             if float(round(package_quantity, 8)) != self.package_quantity:
                 raise UserError(gettext(
