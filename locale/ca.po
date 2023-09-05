@@ -21,7 +21,7 @@ msgstr "El producte té paquet"
 msgctxt "model:ir.message,text:msg_product_package_null"
 msgid "You can not create a package because there are sale lines that already "
 "use the product without packages."
-msgstr "No pot crear paquets perque ja hi han línies de venta que ja utilitzen "
+msgstr "No pot crear paquets perque ja hi han línies de compra que ja utilitzen "
 "aquest producte sense paquets."
 
 msgctxt "model:ir.message,text:msg_package_quantity"
