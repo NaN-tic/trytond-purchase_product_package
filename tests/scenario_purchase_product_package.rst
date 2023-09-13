@@ -134,6 +134,7 @@ Purchase products with package::
     >>> line.product = product
     >>> line.product_package = package
     >>> line.package_quantity = 2
+    >>> line.unit_price = product.cost_price
     >>> line.quantity
     12.0
     >>> line.amount
