@@ -146,4 +146,7 @@ Purchase products with package::
     >>> line.quantity = 12
     >>> line.package_quantity
     2
+    >>> line.quantity = -12
+    >>> line.package_quantity
+    -2
     >>> purchase.save()
