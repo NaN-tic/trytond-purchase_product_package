@@ -38,7 +38,7 @@ class PurchaseLine(metaclass=PoolMeta):
             })
 
     @fields.depends('product_package', 'quantity', 'product_package',
-        'product')
+        'product', 'package_quantity')
     def pre_validate(self):
         try:
             super(PurchaseLine, self).pre_validate()
