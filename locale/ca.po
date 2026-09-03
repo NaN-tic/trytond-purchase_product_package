@@ -31,3 +31,19 @@ msgid ""
 msgstr ""
 "La quantitat \"%(qty)s\" del producte \"%(product)s\" no és un múltiple de la quantitat "
 "del seu paquet \"%(package)s\" (\"%(package_qty)s\")."
+
+msgctxt "field:product.template,default_purchase_package:"
+msgid "Default Purchase Package"
+msgstr "Paquet de compra predeterminat"
+
+msgctxt "field:product.product,default_purchase_package:"
+msgid "Default Purchase Package"
+msgstr "Paquet de compra predeterminat"
+
+msgctxt "field:purchase.product_supplier,default_supplier_package:"
+msgid "Default Supplier Package"
+msgstr "Paquet predeterminat del proveïdor"
+
+msgctxt "field:purchase.request,product_package:"
+msgid "Package"
+msgstr "Empaquetament"

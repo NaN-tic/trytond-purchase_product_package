@@ -101,9 +101,21 @@ class Test(unittest.TestCase):
         package = template.packages.new()
         package.name = 'Box'
         package.quantity = 6
+        package2 = template.packages.new()
+        package2.name = 'Supplier Box'
+        package2.quantity = 3
+        package2.is_default = False
+        product_supplier = template.product_suppliers.new()
+        product_supplier.company = company
+        product_supplier.party = supplier
         template.save()
         template.reload()
-        package, = template.packages
+        package, package2 = template.packages
+        product_supplier, = template.product_suppliers
+        template.default_purchase_package = package
+        product_supplier.default_supplier_package = package2
+        template.save()
+        template.reload()
         product.template = template
         product.cost_price = Decimal('5')
         product.save()
@@ -121,17 +133,17 @@ class Test(unittest.TestCase):
         purchase.invoice_method = 'order'
         line = purchase.lines.new()
         line.product = product
-        line.product_package = package
+        self.assertEqual(line.product_package, package2)
         line.package_quantity = 2
         line.unit_price = product.cost_price
-        self.assertEqual(line.quantity, 12.0)
-        self.assertEqual(line.amount, Decimal('60.00'))
-        line.quantity = 13
+        self.assertEqual(line.quantity, 6.0)
+        self.assertEqual(line.amount, Decimal('30.00'))
+        line.quantity = 7
         with self.assertRaises(UserError):
 
             purchase.save()
-        line.quantity = 12
+        line.quantity = 6
         self.assertEqual(line.package_quantity, 2)
-        line.quantity = -12
+        line.quantity = -6
         self.assertEqual(line.package_quantity, -2)
         purchase.save()
