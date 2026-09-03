@@ -33,3 +33,19 @@ msgid ""
 msgstr ""
 "No puede crear paquetes porque hay líneas de compra que ya usan este producto"
 " sin paquetes."
+
+msgctxt "field:product.template,default_purchase_package:"
+msgid "Default Purchase Package"
+msgstr "Paquete de compra predeterminado"
+
+msgctxt "field:product.product,default_purchase_package:"
+msgid "Default Purchase Package"
+msgstr "Paquete de compra predeterminado"
+
+msgctxt "field:purchase.product_supplier,default_supplier_package:"
+msgid "Default Supplier Package"
+msgstr "Paquete predeterminado del proveedor"
+
+msgctxt "field:purchase.request,product_package:"
+msgid "Package"
+msgstr "Empaquetado"
