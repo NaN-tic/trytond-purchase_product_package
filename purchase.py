@@ -11,12 +11,19 @@ from trytond.i18n import gettext
 from trytond.exceptions import UserError
 
 
+class Configuration(metaclass=PoolMeta):
+    __name__ = 'purchase.configuration'
+
+    package_required = fields.Boolean('Package Required')
+
+    @staticmethod
+    def default_package_required():
+        return False
+
+
 class PurchaseLine(metaclass=PoolMeta):
     __name__ = 'purchase.line'
 
-    product_has_packages = fields.Function(fields.Boolean(
-            'Product Has packages'),
-        'on_change_with_product_has_packages')
     product_template = fields.Function(fields.Many2One('product.template',
             'Product Has packages', context={
                 'company': Eval('company', -1),
@@ -27,16 +34,12 @@ class PurchaseLine(metaclass=PoolMeta):
             ['OR',
                 ('template', '=', Eval('product_template', 0)),
                 ('product', '=', Eval('product', 0)),]
-        ],
+            ],
         states={
-            'invisible': ~Eval('product_has_packages', False),
-            'required': Eval('product_has_packages', False),
             'readonly': Eval('purchase_state') != 'draft',
             })
     package_quantity = fields.Function(fields.Integer('Package Quantity',
             states={
-                'invisible': ~Eval('product_has_packages', False),
-                'required': Eval('product_has_packages', False),
                 'readonly': Eval('purchase_state') != 'draft',
                 }),
         'on_change_with_package_quantity', setter='set_package_quantity')
@@ -77,6 +80,14 @@ class PurchaseLine(metaclass=PoolMeta):
             super(PurchaseLine, self).pre_validate()
         except AttributeError:
             pass
+        Configuration = Pool().get('purchase.configuration')
+        if (self.type == 'line' and self.product
+                and self.purchase_state == 'draft'
+                and Configuration(1).package_required
+                and not self.product_package):
+            raise UserError(gettext(
+                'purchase_product_package.msg_package_required',
+                line=self.rec_name))
         if (self.product_package
                 and Transaction().context.get('validate_package', True)):
             package_quantity = ((self.quantity or 0.0) /
@@ -100,13 +111,6 @@ class PurchaseLine(metaclass=PoolMeta):
                 self.product_package = self.product_supplier.get_purchase_package()
             if not self.product_package:
                 self.product_package = self.product.get_purchase_package()
-
-    @fields.depends('product', 'product_supplier')
-    def on_change_with_product_has_packages(self, name=None):
-        if self.product and (self.product.template.packages or
-                self.product.packages):
-            return True
-        return False
 
     @fields.depends('product', 'product_supplier')
     def on_change_with_product_template(self, name=None):
@@ -136,7 +140,8 @@ class PurchaseLineStockProductPackage(metaclass=PoolMeta):
 
     def get_move(self, move_type):
         move = super().get_move(move_type)
-        move.product_package = self.product_package
+        if move:
+            move.product_package = self.product_package
         return move
 
 

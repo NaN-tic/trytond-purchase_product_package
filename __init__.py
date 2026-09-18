@@ -1,8 +1,7 @@
 # The COPYRIGHT file at the top level of this repository contains the full
 # copyright notices and license terms.
 from trytond.pool import Pool
-from . import product
-from . import purchase
+from . import product, purchase
 
 
 def register():
@@ -11,6 +10,7 @@ def register():
         product.Template,
         product.Product,
         product.ProductSupplier,
+        purchase.Configuration,
         purchase.PurchaseLine,
         purchase.PurchaseRequest,
         module='purchase_product_package', type_='model')

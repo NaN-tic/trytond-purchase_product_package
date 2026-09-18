@@ -44,5 +44,10 @@
             <field name="inherit" ref="purchase.purchase_line_view_tree"/>
             <field name="name">purchase_line_tree</field>
         </record>
+        <record model="ir.ui.view" id="purchase_configuration_view_form">
+            <field name="model">purchase.configuration</field>
+            <field name="inherit" ref="purchase.purchase_configuration_view_form"/>
+            <field name="name">configuration_form</field>
+        </record>
     </data>
 </tryton>

@@ -138,6 +138,14 @@ class Test(unittest.TestCase):
         line.unit_price = product.cost_price
         self.assertEqual(line.quantity, 6.0)
         self.assertEqual(line.amount, Decimal('30.00'))
+
+        packageless_line = purchase.lines.new()
+        packageless_line.product = product
+        packageless_line.product_package = None
+        packageless_line.quantity = 1
+        packageless_line.unit_price = product.cost_price
+        self.assertIsNone(packageless_line.product_package)
+
         line.quantity = 7
         with self.assertRaises(UserError):
 
@@ -147,3 +155,23 @@ class Test(unittest.TestCase):
         line.quantity = -6
         self.assertEqual(line.package_quantity, -2)
         purchase.save()
+
+        Configuration = Model.get('purchase.configuration')
+        configuration = Configuration(1)
+        config.user = 0
+        configuration.package_required = True
+        configuration.save()
+        required_purchase = Purchase()
+        required_purchase.party = supplier
+        required_purchase.payment_term = payment_term
+        required_purchase.invoice_method = 'order'
+        required_line = required_purchase.lines.new()
+        required_line.product = product
+        required_line.product_package = None
+        required_line.quantity = 2
+        required_line.unit_price = product.cost_price
+        with self.assertRaises(UserError):
+            required_purchase.save()
+        configuration.package_required = False
+        configuration.save()
+        config.user = purchase_user.id
