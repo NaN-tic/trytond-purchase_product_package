@@ -2,7 +2,7 @@
 <!-- The COPYRIGHT file at the top level of this repository contains the full
      copyright notices and license terms. -->
 <data>
-    <xpath expr="/form/notebook/page/label[@name='quantity']"
+    <xpath expr="/form/notebook/page[@id='general']/label[@name='quantity']"
             position="before">
         <label name="product_package"/>
         <field name="product_package"/>
