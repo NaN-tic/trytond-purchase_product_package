@@ -77,7 +77,7 @@ class PurchaseLine(metaclass=PoolMeta):
     @fields.depends('product_package', 'quantity', 'product', 'package_quantity')
     def pre_validate(self):
         try:
-            super(PurchaseLine, self).pre_validate()
+            super().pre_validate()
         except AttributeError:
             pass
         Configuration = Pool().get('purchase.configuration')
@@ -98,7 +98,7 @@ class PurchaseLine(metaclass=PoolMeta):
                 raise UserError(gettext(
                     'purchase_product_package.msg_package_quantity',
                     qty=self.quantity,
-                    product=self.product.rec_name,
+                    product=self.product and self.product.rec_name or '',
                     package=self.product_package.rec_name,
                     package_qty=self.product_package.quantity))
 
