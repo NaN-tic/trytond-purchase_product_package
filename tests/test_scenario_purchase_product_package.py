@@ -120,6 +120,20 @@ class Test(unittest.TestCase):
         product.cost_price = Decimal('5')
         product.save()
 
+        unpackaged_template = ProductTemplate()
+        unpackaged_template.name = 'unpackaged product'
+        unpackaged_template.default_uom = unit
+        unpackaged_template.type = 'goods'
+        unpackaged_template.purchasable = True
+        unpackaged_template.list_price = Decimal('10')
+        unpackaged_template.cost_price_method = 'fixed'
+        unpackaged_template.account_category = account_category
+        unpackaged_template.save()
+        unpackaged_product = Product()
+        unpackaged_product.template = unpackaged_template
+        unpackaged_product.cost_price = Decimal('5')
+        unpackaged_product.save()
+
         # Create payment term
         payment_term = create_payment_term()
         payment_term.save()
@@ -172,6 +186,16 @@ class Test(unittest.TestCase):
         required_line.unit_price = product.cost_price
         with self.assertRaises(UserError):
             required_purchase.save()
+        unpackaged_purchase = Purchase()
+        unpackaged_purchase.party = supplier
+        unpackaged_purchase.payment_term = payment_term
+        unpackaged_purchase.invoice_method = 'order'
+        unpackaged_line = unpackaged_purchase.lines.new()
+        unpackaged_line.product = unpackaged_product
+        self.assertIsNone(unpackaged_line.product_package)
+        unpackaged_line.quantity = 2
+        unpackaged_line.unit_price = unpackaged_product.cost_price
+        unpackaged_purchase.save()
         configuration.package_required = False
         configuration.save()
         config.user = purchase_user.id
