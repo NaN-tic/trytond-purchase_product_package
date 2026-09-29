@@ -84,6 +84,7 @@ class PurchaseLine(metaclass=PoolMeta):
         if (self.type == 'line' and self.product
                 and self.purchase_state == 'draft'
                 and Configuration(1).package_required
+                and (self.product.template.packages or self.product.packages)
                 and not self.product_package):
             raise UserError(gettext(
                 'purchase_product_package.msg_package_required',
