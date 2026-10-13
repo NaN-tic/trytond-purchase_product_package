@@ -74,7 +74,8 @@ class PurchaseLine(metaclass=PoolMeta):
         if to_write:
             cls.write(*to_write)
 
-    @fields.depends('product_package', 'quantity', 'product', 'package_quantity')
+    @fields.depends('type', 'product', 'purchase_state', 'product_package',
+        'quantity', 'package_quantity')
     def pre_validate(self):
         try:
             super().pre_validate()
