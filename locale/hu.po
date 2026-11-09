@@ -1,0 +1,62 @@
+#
+msgid ""
+msgstr ""
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "field:purchase.line,package_quantity:"
+msgid "Package Quantity"
+msgstr "Csomagolási mennyiség"
+
+msgctxt "field:purchase.configuration,package_required:"
+msgid "Package Required"
+msgstr "Csomagolás kötelező"
+
+msgctxt "field:purchase.line,product_package:"
+msgid "Package"
+msgstr "Csomagolás"
+
+msgctxt "field:purchase.line,product_template:"
+msgid "Product Has packages"
+msgstr "A terméknek vannak csomagolásai"
+
+#, python-format
+msgctxt "model:ir.message,text:msg_package_quantity"
+msgid ""
+"The quantity \"%(qty)s\" of product \"%(product)s\" is not a multiple of "
+"it\\'s package \"%(package)s\" quantity \"%(package_qty)s\"."
+msgstr ""
+"A(z) „%(product)s” termék „%(qty)s” mennyisége nem többszöröse a(z) "
+"„%(package)s” csomagolás „%(package_qty)s” mennyiségének."
+
+#, python-format
+msgctxt "model:ir.message,text:msg_package_required"
+msgid ""
+"Purchase configuration requires packages on lines. Please assign a package "
+"to line \"%(line)s\" and try again."
+msgstr ""
+"A beszerzési beállítások szerint a tételekhez csomagolás szükséges. "
+"Rendeljen csomagolást a(z) „%(line)s” tételhez, majd próbálja újra."
+
+msgctxt "field:product.template,default_purchase_package:"
+msgid "Default Purchase Package"
+msgstr "Alapértelmezett beszerzési csomagolás"
+
+msgctxt "field:product.product,default_purchase_package:"
+msgid "Default Purchase Package"
+msgstr "Alapértelmezett beszerzési csomagolás"
+
+msgctxt "field:purchase.product_supplier,default_supplier_package:"
+msgid "Default Supplier Package"
+msgstr "Alapértelmezett szállítói csomagolás"
+
+msgctxt "field:purchase.request,product_package:"
+msgid "Package"
+msgstr "Csomagolás"
+
+msgctxt "field:purchase.line,product_has_packages:"
+msgid "Product Has packages"
+msgstr "A terméknek vannak csomagolásai"
