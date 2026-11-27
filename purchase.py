@@ -109,8 +109,8 @@ class PurchaseLine(metaclass=PoolMeta):
     def on_change_quantity(self):
         super(PurchaseLine, self).on_change_quantity()
         if self.product_package and self.quantity:
-            self.package_quantity = int(self.quantity /
-                self.product_package.quantity)
+            self.package_quantity = int(round(self.quantity /
+                self.product_package.quantity, 8))
 
 
 class HandleShipmentException(metaclass=PoolMeta):
